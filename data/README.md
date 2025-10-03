@@ -1,11 +1,33 @@
 # Data Preparation
 
 This folder contains scripts, notes, and configurations for preparing multilingual training data for the **MiniLingua 1B** model.  
-The dataset covers **13 European languages** and **code corpora**, carefully filtered and cleaned to ensure quality.  
+The dataset includes 13 European languages plus programming code corpora, with extensive filtering and cleaning to ensure quality.
 
-## Contents
-- **Preprocessing scripts** – text normalization, deduplication, filtering.  
-- **Dataset configs** – specifying language splits and proportions.  
+Data preparation relied on the [**Datatrove library (v0.4.0)**](https://github.com/huggingface/datatrove/tree/main), along with several custom scripts and processors. These handled both content filtering (e.g., removing inappropriate text) and cluster-specific preprocessing.
+
+
+## Folder Contents
+- `bad_words/` — multilingual lists of obscene/sexual terms used for filtering  
+- `data_pipeline/` — example base pipeline for cleaning, plus custom filters
+
+
+## Cleaning & Filtering Pipeline
+
+Different datasets required different filtering rules, but the **full pipeline** included:
+
+1. **Language identification** using FastText models (Joulin et al., 2016).  
+2. **Heuristic filtering** (Rae et al., 2022), such as:
+   - Removing overly short/long documents  
+   - Filtering by % of bullet lines  
+   - Filtering by % of non-alphanumeric characters  
+3. **Repetition filter** to remove documents with excessive repetition of characters, words, or n-grams (Rae et al., 2022).  
+4. **Blacklist filtering** using a multilingual list of inappropriate terms:
+   - Based on [LDNOOBW](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words)  
+   - Translations of Datatrove’s bad words list (Penedo et al., 2024) via Google Translate  
+   - Extended and manually reviewed with help from native speakers  
+5. **Deduplication within datasets** to remove near-duplicates with high line or paragraph overlap (Rae et al., 2022).  
+6. **Cross-set deduplication** using Jaccard similarity to prevent overlap between training and evaluation splits, reducing leakage and ensuring fair downstream evaluation.
+
 
 ## Token Estimation Prior to Tokenizer Training
 
