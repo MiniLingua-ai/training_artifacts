@@ -5,7 +5,13 @@ The dataset covers **13 European languages** and **code corpora**, carefully fil
 
 ## Contents
 - **Preprocessing scripts** – text normalization, deduplication, filtering.  
-- **Dataset configs** – specifying language splits and proportions.  
+- **Dataset configs** – specifying language splits and proportions.
+- **Loading scripts** – data extraction and format conversion utilities.
+
+## 📁 Dataset Processing Scripts
+
+This folder contains various loading and preprocessing scripts for different data sources used in MiniLingua 1B training.
+These scripts handle format conversion, text cleaning, language detection, and quality filtering for the diverse multilingual datasets used in training.  
 
 ## Token Estimation Prior to Tokenizer Training
 
