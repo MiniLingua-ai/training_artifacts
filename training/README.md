@@ -9,9 +9,12 @@ This repository contains the complete training pipeline for **MiniLingua 1B**, a
 - **Architecture**: Decoder-only Transformer (GPT-style)
 - **Parameters**: 1 billion parameters
 - **Context Length**: 2048 tokens
-- **Training Framework**: Megatron-LM with PyTorch
+- **Training Framework**: [Megatron-LM (commit used)](https://github.com/ROCm/Megatron-LM/tree/99bb7a92291528fe713618b355b1b9b31d3b3b9f) with PyTorch
 - **Precision**: BFloat16 (bf16)
 - **Languages**: Multilingual support (All languages and datasets are listed in the data folder)
+- **Training Infrastructure**: [LUMI Supercomputer](https://lumi-supercomputer.eu/)
+- **Container**: `/appl/local/containers/sif-images/lumi-pytorch-rocm-6.2.4-python-3.12-pytorch-v2.6.0.sif`
+- **Final Models**: Available on [HuggingFace](https://huggingface.co/minilingua-ai)
 
 ### Model Architecture Details
 
@@ -100,6 +103,16 @@ Where α_opt is the optimal hyperparameter, β is the scaling coefficient, C is 
 - Scaling exponent (γ): -0.216
 - Scaling coefficient (β): 33.1
 - Optimal learning rate for 1B model: ~0.00059
+
+#### Scaling Law Visualizations
+
+The following plots demonstrate the power law relationships discovered during hyperparameter optimization:
+
+![Batch Size Scaling](flops_bs_experiment.png)
+*Optimal batch size scaling with compute budget (FLOPs). The trend line shows the power law relationship used to predict optimal batch size for the 1B model.*
+
+![Learning Rate Scaling](flops_lr_experiment.png)
+*Optimal learning rate scaling with compute budget (FLOPs). The trend line demonstrates the inverse relationship between compute budget and optimal learning rate.*
 
 
 ### 2. Full-Scale Training (`full_train.sh`)

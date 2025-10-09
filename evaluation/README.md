@@ -11,16 +11,17 @@ The evaluation framework assesses MiniLingua 1B across diverse multilingual task
 ### Core Benchmarks
 | Benchmark | Task Type | Languages | Response Format | Description | Evaluation script |
 |-----------|-----------|-----------|-----------------|-------------|-----------------|
-| **FLORES-200** | Translation | 13 | Free text | English-to-target translation | `flores_eval.py` |
-| **Belebele** | Reading Comprehension | 13 | Multiple choice | Open-book question answering | `belebele_llm_judge.py` |
-| **SIB** | Classification | 13 | Multiple choice | Topic classification | `sib_eval.py` |
-| **MMLU** | Knowledge | 13 | Multiple choice | Multitask language understanding | `mmlu_eval.py` |
-| **MassiveSum** | Summarization | 12 | Free text | Text summarization | `massivesum_eval.py` |
+| **FLORES-200** | Translation | 13 | Free text | English-to-target translation | `flores.py` |
+| **Belebele** | Reading Comprehension | 13 | Multiple choice | Open-book question answering | `belebele.py` |
+| **SIB** | Classification | 13 | Multiple choice | Topic classification | `sib.py` |
+| **MMLU** | Knowledge | 13 | Multiple choice | Multitask language understanding | `mmlu.py` |
+| **MassiveSum** | Summarization | 12 | Free text | Text summarization | `massivesum.py` |
 
 ### Multiple-Choice Format Support
 For multiple-choice tasks (Belebele, SIB, MMLU), the model is evaluated with:
 - **Letter format**: A, B, C, D responses
 - **Number format**: 1, 2, 3, 4 responses
+- **Full response format**: Model should provide full answer across suggested options.
 
 ## 📈 Performance Results
 

@@ -3,15 +3,9 @@ import os
 import logging
 from multiprocessing import Pool
 
-exclude_folders = ["bad_words_data", "datatrove_output", "datatrove_output_boris", 
-                   "datatrove_scripts", "datatrove_scripts_new", "miniconda3", "myenv", 
-                   "test_datasets", "test_web", "to_check", "tokeniser", "tokenizers", "train_web", "web_data_scripts", "stack"]
-
 all_file_pathes = set()
 
 for root, _, files in os.walk("."):
-        if any([folder in root for folder in exclude_folders]):
-            continue
         for file in files:
             if file.endswith(".parquet"):
                 file_path = os.path.join(root, file)
@@ -33,7 +27,7 @@ def process_parquet(file_path):
             df.to_parquet(file_path)
             logging.info(f"Processed: {file_path}")
         else:
-            logging.error(f"No text field {file_path}: {e}")
+            logging.error(f"No text field {file_path}")
     except Exception as e:
         logging.error(f"Error processing {file_path}: {e}")
 

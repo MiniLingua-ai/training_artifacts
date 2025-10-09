@@ -1,6 +1,6 @@
 # MiniLingua 1B Supervised Fine-Tuning (SFT)
 
-This folder contains scripts and configurations for supervised fine-tuning (SFT) of the MiniLingua 1B model. SFT adapts the pre-trained base model to follow multilingual and multi-domain instructions, making it more useful and better aligned with user needs.
+This folder contains configuration files, scripts, and notes for supervised fine-tuning (SFT) of the MiniLingua 1B model. SFT adapts the pre-trained base model to follow multilingual and multi-domain instructions, making it more useful and better aligned with user needs.
 
 ## 🎯 Overview
 
@@ -45,66 +45,15 @@ A specialized dataset was created for multiple-choice question answering, suppor
 - 30% instructions in English
 - 70% instructions in target language
 
-## 📁 Scripts Overview
+## 📁 Contents
 
-### 1. `sft_train.sh` - Main Training Script
-Executes the supervised fine-tuning process using Megatron-LM framework
-
-**Key Configuration**:
-- **Hardware**: 1 node, 4 NVIDIA H200 GPUs
-- **Batch Size**: 256 instructions (16 micro-batch size)
-- **Learning Rate**: 2e-6 (constant schedule)
-- **Training Duration**: ~50 hours
-- **Memory**: 1TB total memory allocation
-- **Precision**: BFloat16 training
-
-
-### 2. `read_data.ipynb` - Dataset Analysis and Processing
-Comprehensive notebook for analyzing, processing, and cleaning multilingual SFT datasets
-
-**What it does**:
-- **Dataset Loading**: Reads various dataset formats (JSON, JSON.gz, Parquet)
-- **Data Conversion**: Converts JSON/JSON.gz files to Parquet format with sampling
-- **Token Analysis**: Counts tokens per instruction and output using the trained tokenizer
-- **Language Detection**: Uses FastText to identify and filter by language
-- **Data Cleaning**: Removes low-quality data and filters by sequence length
-- **Format Standardization**: Applies consistent chat template formatting
-
-**Chat Template Format**:
-```
-<|start_of_sequence|><|im_start|>
-{instruction}
-{input}
-<|im_end|>
-{output}<|end_of_sequence|>
-```
-**Quality Filters Applied**:
-- Removes sequences longer than 2000 tokens
-- Filters out incomplete instructions ending with ':'
-- Excludes low-quality datasets (NQ-Open, etc.)
-- Language verification using FastText model
-- Dataset-specific quality controls
-
-### 3. `generate_instructions.py` - JSONL Conversion
-- Reads processed Parquet files for each language
-- Applies Hugging Face chat template formatting
-- Converts to conversation format with user/assistant roles
-- Counts tokens using the trained tokenizer
-- Generates token statistics per language
-
-### 4. `data_shuffle.py` - Data Randomization
-- Reads all JSONL files in the specified directory
-- Randomly shuffles the order of instructions within each file
-- Preserves the original file structure and format
-- Ensures training data is presented in random order
-
-
-### 5. `create_sft_mcqa.ipynb` - MCQA Dataset Creation
-- Processes various QA datasets (ARC, SweFAQ, TruthfulQA, etc.)
-- Generates instructions in both English and target languages
-- Creates three answer formats (letter, number, full text)
-- Balances language and format distributions
-- Validates dataset quality and consistency
+Training configs presented as `.sh` scripts include batch sizes, LR schedules, optimizer choices and other parameters as a part of Megatron-LM launch script.
+`token_counts.csv` presents training data distribution.
+`convert.sh` script was used to convert megatron model to HF-compatible format.
+`training_loss.png` gives example of the training loss dynamics while going through SFT process.
+`generate_instructions.py` applies instructions to sft datasets.
+`data_shuffle.py` reads sft datasets and shuffles each instructions in each file randomly.
+`create_sft_mcqa.py` processes various QA datasets and create custom multi-choice QA multilingual dataset.
 
 ## 🔧 Training Configuration
 
@@ -154,3 +103,17 @@ SEQUENCE_LENGTH: 2048
 | **👣 Total Steps** | ~6,000 steps |
 | **⚡ Throughput** | ~43 instructions/second |
 | **🖥️ Hardware** | 4 × NVIDIA H200 GPUs |
+
+### 📈 Training Loss Curve
+
+The training dynamics during SFT are illustrated below, showing the convergence behavior of both training and validation loss over the course of training iterations.
+
+![Training and Validation Loss Curves](training_loss.png)
+
+## 🔧 Training Environment
+
+We trained our models using [NVIDIA Megatron-LM](https://github.com/NVIDIA/Megatron-LM), running inside the official [NGC PyTorch container](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch?version=25.04-py3).
+
+In addition, we installed [TransformerEngine](https://github.com/NVIDIA/TransformerEngine) for optimized kernels and Hugging Face libraries (`transformers`, `datasets`, `tokenizers`) for data and tokenizer support. The versions used are pinned in `requirements.txt`.
+
+Setup follows directly from the instructions in the linked repositories, with minor environment variable adjustments needed specifically for the cluster we were working with.

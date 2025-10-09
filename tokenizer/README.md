@@ -4,7 +4,7 @@ This folder contains scripts and tools for creating and evaluating the multiling
 
 ## 🎯 Overview
 
-The MiniLingua tokenizer is a **SentencePiece BPE (Byte-Pair Encoding)** tokenizer designed for multilingual language modeling. It supports:
+The MiniLingua tokenizer is a **SentencePiece BPE (Byte-Pair Encoding)** tokenizer designed for multilingual language modeling. Built using `sentencepiece==0.2.0` and `tokenizers==0.21.2`, it supports:
 
 - **13 Languages**: English, German, Spanish, French, Italian, Portuguese, Dutch, Polish, Czech, Bulgarian, Greek, Finnish, Swedish
 - **Code Support**: 9 programming languages (Python, C, JSON, XML, SQL, Markdown, YAML, TeX, Shell)
@@ -49,19 +49,6 @@ The MiniLingua tokenizer is a **SentencePiece BPE (Byte-Pair Encoding)** tokeniz
 - Processes data in parallel using SLURM job scheduler (500 tasks with 64 workers each)
 - Converts text to token sequences for model training
 - Handles large datasets efficiently with distributed processing
-
-
-**Usage**:
-```bash
-python tokenise_training_data.py --data_path train_balanced --lang bg
-```
-
-**Configuration**:
-- **Tasks**: 500 parallel tasks
-- **Workers**: 64 workers per task
-- **Time Limit**: 12 hours
-- **Memory**: 20GB per CPU
-- **Partition**: batch-milan (SLURM partition)
 
 
 ### Language-Specific Regex Patterns

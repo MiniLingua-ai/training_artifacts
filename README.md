@@ -2,6 +2,12 @@
 
 This repository contains the training artifacts of the **MiniLingua** model – a small multilingual language model with 1B parameters, trained on 13 European languages and code.  
 
+## 🤗 Model Access
+
+The final trained models and tokenizer are available on Hugging Face:
+
+**[https://huggingface.co/minilingua-ai](https://huggingface.co/minilingua-ai)**
+
 ---
 
 ## Repository Structure

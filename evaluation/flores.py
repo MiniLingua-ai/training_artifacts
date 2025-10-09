@@ -1,6 +1,7 @@
 import pandas as pd
 from vllm import LLM, SamplingParams
 from comet import download_model, load_from_checkpoint
+from transformers import AutoTokenizer
 from tqdm import tqdm
 from datasets import load_dataset
 import argparse
@@ -15,6 +16,7 @@ parser.add_argument('--model', type=str, required=True, help='Model alias or cus
 args = parser.parse_args()
 output_dir = f"/scratch/cs/small_lm/eval_scripts/flores/{args.model}"
 os.makedirs(output_dir, exist_ok=True)
+tokenizer = AutoTokenizer.from_pretrained(args.model_name)
 
 langs = [
     ('Czech', 'cs', 'ces_Latn'),
@@ -44,15 +46,18 @@ for lang in langs:
     data = data['dev'].to_pandas()
 
     # Translation prompt template
-    PROMPT_TEMPLATE = f"Translate the following text from English to {lang[0]}:"
+    PROMPT_TEMPLATE = f"Translate the following text from English to {lang[0]}: "
     SAMPLING_PARAMS = SamplingParams(temperature=0, max_tokens=200)
 
     print("Preparing prompts...")
     prompts = [PROMPT_TEMPLATE + sentence for sentence in tqdm(data[f"sentence_eng_Latn"].values)]
+    prompts = [[{"role": "user", "content": prompt}] for prompt in prompts]
+    full_prompts = [tokenizer.apply_chat_template(prompt, tokenize=False, add_generation_prompt=False) for prompt in prompts]
+    full_prompts = [instr.replace("<|end_of_sequence|>", "") for instr in full_prompts]
 
     # Generate translations in a batch
     print("Translating sentences...")
-    outputs = llm.generate(prompts, SAMPLING_PARAMS)
+    outputs = llm.generate(full_prompts, SAMPLING_PARAMS)
 
     # Extract translations and add them to the data
     data["generated_translation"] = [output.outputs[0].text.strip().replace('\n', ' ') for output in outputs]

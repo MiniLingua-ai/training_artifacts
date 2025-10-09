@@ -2,6 +2,8 @@ import pandas as pd
 from vllm import LLM, SamplingParams
 import evaluate
 from tqdm import tqdm
+from datasets import load_dataset
+from transformers import AutoTokenizer
 import argparse
 import os
 
@@ -14,6 +16,7 @@ parser.add_argument('--model', type=str, required=True, help='Model alias or cus
 args = parser.parse_args()
 output_dir = f"/scratch/cs/small_lm/eval_scripts/massivesum/{args.model}"
 os.makedirs(output_dir, exist_ok=True)
+tokenizer = AutoTokenizer.from_pretrained(args.model_name)
 
 langs = [
     ('Czech', 'cs', 'ces_Latn'),
@@ -27,8 +30,7 @@ langs = [
     ('Portuguese', 'pt', 'por_Latn'),
     ('Swedish', 'sv', 'swe_Latn'),
     ('Bulgarian', 'bg', 'bul_Cyrl'),
-    ('Polish', 'pl', 'pol_Latn'),
-    # ('English', 'en', 'eng_Latn')
+    ('Polish', 'pl', 'pol_Latn')
 ]
 
 # Load Mistral-7B using vLLM
@@ -43,20 +45,25 @@ for lang in langs:
 
     data = data_full[data_full['language'] == lang[2].split('_')[0]].copy()
     data['words'] = data['text'].apply(lambda x: len(x.split()))
-    data = data[data['words'] < 800].head(100).copy()
+    data = data[data['words'] < 500].head(100).copy()
+    print(data.shape)
 
     # Translation prompt template
-    PROMPT_TEMPLATE = f"Summarize the following text:\n"
+    PROMPT_TEMPLATE = f"Summarize the following text in a couple of sentences:\n"
     SAMPLING_PARAMS = SamplingParams(temperature=0, max_tokens=2048)
 
     print("Preparing prompts...")
     prompts = [PROMPT_TEMPLATE + sentence for sentence in tqdm(data["text"].values)]
+    prompts = [[{"role": "user", "content": prompt}] for prompt in prompts]
+    full_prompts = [tokenizer.apply_chat_template(prompt, tokenize=False, add_generation_prompt=False) for prompt in prompts]
+    full_prompts = [instr.replace("<|end_of_sequence|>", "") for instr in full_prompts]
 
     # Generate translations in a batch
     print("Summarizing sentences...")
-    outputs = llm.generate(prompts, SAMPLING_PARAMS)
+    outputs = llm.generate(full_prompts, SAMPLING_PARAMS)
 
     # Extract translations and add them to the data
+    data['prompts'] = full_prompts
     data['summary'] = [i.strip().replace('\n', ' ') for i in data['summary'].tolist()]
     data["generated_summary"] = [output.outputs[0].text.strip().replace('\n', ' ') for output in outputs]
     print(outputs[0].outputs[0].text)
@@ -78,7 +85,7 @@ for lang in langs:
 
     # Save results
     data['text'] = data['text'].apply(lambda x: x.replace('\t', ' '))
-    data.to_csv(f"/scratch/cs/small_lm/eval_scripts/massivesum/{args.model}/massivesum_{lang[1]}.tsv", index=False, sep='\t')
+    data.to_parquet(f"/scratch/cs/small_lm/eval_scripts/massivesum/{args.model}/massivesum_{lang[1]}.parquet", index=False)
 
 
     # Print average COMET score
