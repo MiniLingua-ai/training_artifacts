@@ -12,10 +12,14 @@ import os
 parser = argparse.ArgumentParser(description="Load model and language setup.")
 parser.add_argument('--model_name', type=str, required=True, help='Path or identifier of the model to load.')
 parser.add_argument('--model', type=str, required=True, help='Model alias or custom identifier.')
+parser.add_argument('--base_path', type=str, required=True, help='Base directory for input/output paths.')
 
 args = parser.parse_args()
-output_dir = f"/scratch/cs/small_lm/eval_scripts/flores/{args.model}"
+
+# Create output directory
+output_dir = os.path.join(args.base_path, "flores", args.model)
 os.makedirs(output_dir, exist_ok=True)
+
 tokenizer = AutoTokenizer.from_pretrained(args.model_name)
 
 langs = [
@@ -33,10 +37,8 @@ langs = [
     ('Polish', 'pl', 'pol_Latn')
 ]
 
-# Load Mistral-7B using vLLM
-#model_name =  "HuggingFaceTB/SmolLM2-1.7B-Instruct" # "/scratch/cs/small_lm/gemma-3-1b-it" # "utter-project/EuroLLM-1.7B-Instruct" # "HuggingFaceTB/SmolLM2-1.7B-Instruct" # 
+# Load LLM using vLLM
 llm = LLM(model=args.model_name, dtype="float16", gpu_memory_utilization=.7,)
-# model = 'ellm'
 
 
 for lang in langs:
@@ -64,8 +66,10 @@ for lang in langs:
 
     # Load COMET model
     print("Loading COMET model...")
+    # Make sure you have the model downloaded. Due to cluster restrictions, in our case the download was manual, therefore the path is fixed
     # model_path = download_model("Unbabel/wmt22-comet-da")
-    comet_model = load_from_checkpoint('/scratch/cs/small_lm/eval_scripts/Unbabel--wmt22-comet-da/model.ckpt')
+    comet_model_path = os.path.join(args.base_path, "Unbabel--wmt22-comet-da", "model.ckpt")
+    comet_model = load_from_checkpoint(comet_model_path)
 
     # Function to compute COMET score
     def compute_comet_scores(src_sentences, mt_sentences, ref_sentences):
@@ -83,11 +87,11 @@ for lang in langs:
     data.drop(columns=['URL', 'domain', 'has_image', 'has_hyperlink'], inplace=True)
 
     # Save results
-    data.to_csv(f"/scratch/cs/small_lm/eval_scripts/flores/{args.model}/flores_{lang[1]}.tsv", index=False, sep='\t', quoting=3, escapechar='\\')
-
+    output_tsv = os.path.join(output_dir, f"flores_{lang[1]}.tsv")
+    data.to_csv(output_tsv, index=False, sep='\t', quoting=3, escapechar='\\')
 
     # Print average COMET score
     avg_comet_score = data["comet_score"].mean()
-
-    with open(f'/scratch/cs/small_lm/eval_scripts/flores/{args.model}/flores_{lang[1]}.txt', 'w') as fw:
+    output_txt = os.path.join(output_dir, f"flores_{lang[1]}.txt")
+    with open(output_txt, 'w') as fw:
         fw.write(str(avg_comet_score))

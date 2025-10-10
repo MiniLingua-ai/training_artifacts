@@ -12,10 +12,14 @@ import os
 parser = argparse.ArgumentParser(description="Load model and language setup.")
 parser.add_argument('--model_name', type=str, required=True, help='Path or identifier of the model to load.')
 parser.add_argument('--model', type=str, required=True, help='Model alias or custom identifier.')
+parser.add_argument('--base_path', type=str, required=True, help='Base directory for input/output paths.')
 
 args = parser.parse_args()
-output_dir = f"/scratch/cs/small_lm/eval_scripts/massivesum/{args.model}"
+
+# Create output directory
+output_dir = os.path.join(args.base_path, "massivesum", args.model)
 os.makedirs(output_dir, exist_ok=True)
+
 tokenizer = AutoTokenizer.from_pretrained(args.model_name)
 
 langs = [
@@ -23,7 +27,7 @@ langs = [
     ('German', 'de', 'deu_Latn'),
     ('Greek', 'el', 'ell_Grek'),
     ('Spanish', 'es', 'spa_Latn'),
-    # ('Finnish', 'fi', 'fin_Latn'),
+    # ('Finnish', 'fi', 'fin_Latn'), Missing from MassiveSum
     ('French', 'fr', 'fra_Latn'),
     ('Italian', 'it', 'ita_Latn'),
     ('Dutch', 'nl', 'nld_Latn'),
@@ -33,18 +37,19 @@ langs = [
     ('Polish', 'pl', 'pol_Latn')
 ]
 
-# Load Mistral-7B using vLLM
-#model_name =  "HuggingFaceTB/SmolLM2-1.7B-Instruct" # "/scratch/cs/small_lm/gemma-3-1b-it" # "utter-project/EuroLLM-1.7B-Instruct" # "HuggingFaceTB/SmolLM2-1.7B-Instruct" # 
+# Load LLM using vLLM
 llm = LLM(model=args.model_name, dtype="float16", gpu_memory_utilization=.7,)
-# model = 'ellm'
 rouge = evaluate.load('rouge')
-data_full = pd.read_parquet('/scratch/cs/small_lm/eval_scripts/massivesum.parquet')
 
+# Original dataset is here: https://github.com/danielvarab/massive-summ.
+data_path = os.path.join(args.base_path, "massivesum.parquet")
+data_full = pd.read_parquet(data_path)
 
 for lang in langs:
 
     data = data_full[data_full['language'] == lang[2].split('_')[0]].copy()
     data['words'] = data['text'].apply(lambda x: len(x.split()))
+    # We used subsample fitting into 2048 tokens context window
     data = data[data['words'] < 500].head(100).copy()
     print(data.shape)
 
@@ -82,14 +87,14 @@ for lang in langs:
         data["generated_summary"].tolist(),
         data[f"summary"].tolist(),
     )
-
+    
     # Save results
     data['text'] = data['text'].apply(lambda x: x.replace('\t', ' '))
-    data.to_parquet(f"/scratch/cs/small_lm/eval_scripts/massivesum/{args.model}/massivesum_{lang[1]}.parquet", index=False)
+    parquet_path = os.path.join(output_dir, f"massivesum_{lang[1]}.parquet")
+    data.to_parquet(parquet_path, index=False)
 
-
-    # Print average COMET score
-    avg_comet_score = data["rouge2"].mean()
-
-    with open(f'/scratch/cs/small_lm/eval_scripts/massivesum/{args.model}/massivesum_{lang[1]}.txt', 'w') as fw:
-        fw.write(str(avg_comet_score))
+    # Print and save average ROUGE score
+    avg_rouge_score = data["rouge2"].mean()
+    txt_path = os.path.join(output_dir, f"massivesum_{lang[1]}.txt")
+    with open(txt_path, 'w') as fw:
+        fw.write(str(avg_rouge_score))

@@ -57,4 +57,4 @@ For multiple-choice tasks (Belebele, SIB, MMLU), the model is evaluated with:
 | Smollm2-1.7b-Instruct | 0.486 | *0.330* | *0.349* | **0.266** | *0.015* |
 
 
-This evaluation framework provides comprehensive assessment of MiniLingua 1B's multilingual capabilities across diverse NLP tasks, demonstrating competitive performance despite efficient training.
+Generally evealuation under different angles shows how fragile the models are against various evaluation formats. Ideally we need a common convention on multilingual setting evaluation.

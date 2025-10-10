@@ -147,16 +147,18 @@ def main():
     parser.add_argument('--model', type=str, required=True, help='Model alias or custom identifier.')
     parser.add_argument('--answer_type', type=str, required=True, choices=['letter', 'number', 'answer'], 
                        help='Type of answer format: letter (A-D), number (1-4), or answer (actual text)')
+    parser.add_argument('--base_path', type=str, required=True, help='Base directory for input/output paths.')
+
     args = parser.parse_args()
 
-    # Set up output directory based on answer type
+    # Build output directory based on answer type
     if args.answer_type == "letter":
-        output_dir = f"/scratch/cs/small_lm/eval_scripts/belebele_alt/{args.model}"
+        output_dir = os.path.join(args.base_path, "belebele", args.model)
     elif args.answer_type == "number":
-        output_dir = f"/scratch/cs/small_lm/eval_scripts/belebele_num_lang/{args.model}"
+        output_dir = os.path.join(args.base_path, "belebele_num", args.model)
     elif args.answer_type == "answer":
-        output_dir = f"/scratch/cs/small_lm/eval_scripts/belebele_answer_lang/{args.model}"
-    
+        output_dir = os.path.join(args.base_path, "belebele_answer", args.model)
+
     os.makedirs(output_dir, exist_ok=True)
 
     # Initialize model
