@@ -9,7 +9,7 @@ Data preparation relied on the [**Datatrove library (v0.4.0)**](https://github.c
 ## Folder Contents
 - `bad_words/` — multilingual lists of obscene/sexual terms used for filtering  
 - `data_pipeline/` — example base pipeline for cleaning, plus custom filters
-
+- `dataset_processing/` - individual scripts for dataset download and processing
 
 ## Cleaning & Filtering Pipeline
 
@@ -23,7 +23,7 @@ Different datasets required different filtering rules, but the **full pipeline**
 3. **Repetition filter** to remove documents with excessive repetition of characters, words, or n-grams (Rae et al., 2022).  
 4. **Blacklist filtering** using a multilingual list of inappropriate terms:
    - Based on [LDNOOBW](https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words)  
-   - Translations of Datatrove’s bad words list (Penedo et al., 2024) via Google Translate  
+   - Translations of Datatrove's bad words list (Penedo et al., 2024) via Google Translate  
    - Extended and manually reviewed with help from native speakers  
 5. **Deduplication within datasets** to remove near-duplicates with high line or paragraph overlap (Rae et al., 2022).  
 6. **Cross-set deduplication** using Jaccard similarity to prevent overlap between training and evaluation splits, reducing leakage and ensuring fair downstream evaluation.

@@ -2,6 +2,12 @@
 
 This repository contains the training artifacts of the **MiniLingua** model – a small multilingual language model with 1B parameters, trained on 13 European languages and code.  
 
+## 🤗 Model Access
+
+The final trained models and tokenizer are available on Hugging Face:
+
+**[https://huggingface.co/minilingua-ai](https://huggingface.co/minilingua-ai)**
+
 ---
 
 ## Repository Structure
@@ -9,19 +15,19 @@ This repository contains the training artifacts of the **MiniLingua** model – 
 The repository is organized as follows:
 
 - **`data/`**  
-  Contains scripts and notes related to dataset preparation, filtering, and preprocessing across 13 languages and multilingual code datasets.  
+  Contains scripts and notes related to dataset preparation, filtering, and preprocessing across 13 languages and code datasets.  
 
 - **`evaluation/`**  
-  Includes evaluation scripts, metrics, and benchmark setup instructions.
+  Includes evaluation scripts, metrics, and benchmark setup.
 
 - **`sft/`**  
   Contains artifacts related to supervised fine-tuning (SFT), including configuration files and guidance for applying instruction tuning.  
 
 - **`tokenizer/`**  
-  Holds tokenizer training artifacts and vocabularies. Includes scripts for training Byte-Pair Encoding (BPE) tokenizers and preparing multilingual vocab.  
+  Holds tokenizer training artifacts. Includes scripts for training Byte-Pair Encoding (BPE) tokenizers and preparing multilingual vocab.  
 
 - **`training/`**  
-  Contains training logs, scripts, and setup details for running large-scale distributed training of the MiniLingua model.  
+  Contains training scripts, and setup details for running large-scale distributed training of the MiniLingua model.  
 
 ---
 
