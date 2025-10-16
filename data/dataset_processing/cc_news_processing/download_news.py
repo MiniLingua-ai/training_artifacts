@@ -2,12 +2,10 @@ import os
 import pandas as pd
 from datasets import load_dataset
 
-# Parameters
-# 'bg', 'cs', 'nl', 'el', 'pl', 'fi',
-# 'de',
-languages = ['de'] # 'sv', 'it', 'fr','es', 'pt']
-output_folder = "/scratch/cs/small_lm"
-lines_per_file = 50000
+
+languages = ['de'] # Set list of languages here
+output_folder = "/scratch/cs/small_lm" # Set base output folder here
+lines_per_file = 50000 # Set number of lines per file here
 
 # Ensure the output folder exists
 os.makedirs(output_folder, exist_ok=True)

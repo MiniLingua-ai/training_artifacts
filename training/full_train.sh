@@ -18,27 +18,51 @@ echo "Starting bash script"
 module purge
 module load LUMI/24.03 partition/G  # Load LUMI supercomputer modules for GPU partition
 
+## USAGE: sbatch GBS LR TOTAL_ITERS WEB_DATA_FOLDER CODE_DATA_FOLDER HQ_DATA_FOLDER
+## EXAMPLE: sbatch 1024 0.0005 725000 /scratch/project_462000756/data/train_web_bin /scratch/project_462000756/data/code_bin /scratch/project_462000756/data/train_hq_bin
+### This script launches a full training of a 1B model on the LUMI cluster.
+
+
+# Check if GBS argument is passed
+if [ -z "$1" ]; then
+  echo "Error: GBS is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$2" ]; then
+  echo "Error: LR is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$3" ]; then
+  echo "Error: TOTAL_ITERS is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$4" ]; then
+  echo "Error: WEB_DATA_FOLDER is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$5" ]; then
+  echo "Error: CODE_DATA_FOLDER is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$6" ]; then
+  echo "Error: HQ_DATA_FOLDER is not provided. Exiting."
+  exit 1
+fi
+
 # Core Training Hyperparameters
-GBS="1024"        # Global Batch Size - total batch size across all GPUs
-LR="0.0005"       # Learning Rate - step size for gradient updates
-TOTAL_ITERS="725000"  # Total number of training iterations
-
-# Logging and Checkpointing Configuration
-LOG_INTERVAL=1        # Log training metrics every N iterations
-SAVE_INTERVAL=1000    # Save model checkpoint every N iterations
-EVAL_INTERVAL=1000    # Run evaluation every N iterations
-EVAL_STEPS=4          # Number of evaluation steps to run
-
+GBS=$1        # Global Batch Size - total batch size across all GPUs (1024)
+LR=$2       # Learning Rate - step size for gradient updates (0.0005)
+TOTAL_ITERS=$3  # Total number of training iterations (725000)
 
 # Weights & Biases (W&B) Configuration for Experiment Tracking
-WANDB_EXP_NAME="1B_bs_1024_lr_0025_warmup_6000_start_0"  # Experiment name for tracking
+WANDB_EXP_NAME="1B_bs_${GBS}_lr_${LR}"  # Experiment name for tracking
 WANDB_PROJECT="small-lm"                                   # W&B project name
 WANDB_SAVE_DIR="wandb_logs"                               # Directory to save W&B logs
 
 # Data Paths - Different types of training data
-WEB_DATA_ROOT="/scratch/project_462000756/data/train_web_bin"    # Web-scraped text data (multilingual)
-CODE_DATA_ROOT="/scratch/project_462000756/data/code_bin"        # Source code data
-HQ_DATA_ROOT="/scratch/project_462000756/data/train_hq_bin"      # High-quality curated text data
+WEB_DATA_ROOT=$4    # Web-scraped text data (multilingual)
+CODE_DATA_ROOT=$5        # Source code data
+HQ_DATA_ROOT=$6      # High-quality curated text data
 CACHE_PATH="${WEB_DATA_ROOT}/index-cache"                        # Cache for data loading optimization
 
 # Data Mixing Configuration - Weighted sampling from different datasets
@@ -46,12 +70,13 @@ CACHE_PATH="${WEB_DATA_ROOT}/index-cache"                        # Cache for dat
 # Includes multilingual web data, high-quality text, and code data
 DATA_PATH="0.2295 ${WEB_DATA_ROOT}/en 0.119 ${WEB_DATA_ROOT}/es 0.0085 ${WEB_DATA_ROOT}/el 0.0595 ${WEB_DATA_ROOT}/pt 0.034 ${WEB_DATA_ROOT}/pl 0.1105 ${WEB_DATA_ROOT}/fr 0.0085 ${WEB_DATA_ROOT}/fi 0.0085 ${WEB_DATA_ROOT}/sv 0.0595 ${WEB_DATA_ROOT}/it 0.153 ${WEB_DATA_ROOT}/de 0.034 ${WEB_DATA_ROOT}/nl 0.017 ${WEB_DATA_ROOT}/cs 0.0085 ${WEB_DATA_ROOT}/bg 0.027 ${HQ_DATA_ROOT}/en 0.014 ${HQ_DATA_ROOT}/es 0.001 ${HQ_DATA_ROOT}/el 0.007 ${HQ_DATA_ROOT}/pt 0.004 ${HQ_DATA_ROOT}/pl 0.013 ${HQ_DATA_ROOT}/fr 0.001 ${HQ_DATA_ROOT}/fi 0.001 ${HQ_DATA_ROOT}/sv 0.007 ${HQ_DATA_ROOT}/it 0.018 ${HQ_DATA_ROOT}/de 0.004 ${HQ_DATA_ROOT}/nl 0.002 ${HQ_DATA_ROOT}/cs 0.001 ${HQ_DATA_ROOT}/bg  0.05 ${CODE_DATA_ROOT}/code"
 
+PROJECT_ROOT_FOLDER="/scratch/project_462000756"
 # Checkpoint Configuration
-CHECKPOINT_PATH="/scratch/project_462000756/checkpoints"  # Base directory for saving model checkpoints
+CHECKPOINT_PATH="${PROJECT_ROOT_FOLDER}/checkpoints"  # Base directory for saving model checkpoints
 SAVE_PATH="${CHECKPOINT_PATH}/${WANDB_EXP_NAME}"          # Specific checkpoint directory for this experiment
 mkdir -p $SAVE_PATH                                       # Create checkpoint directory
 
-TOKENIZER_MODEL="/scratch/project_462000756/tokeniser/ConvertedTokenizer"  # Path to pre-trained tokenizer
+TOKENIZER_MODEL="${PROJECT_ROOT_FOLDER}/tokeniser/ConvertedTokenizer"  # Path to pre-trained tokenizer
 
 # Create symbolic links for easy access to latest log files
 ln -sf ${SLURM_JOB_NAME}-${SLURM_JOBID}.out logs/latest.out

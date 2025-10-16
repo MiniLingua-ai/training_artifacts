@@ -11,6 +11,46 @@ Data preparation relied on the [**Datatrove library (v0.4.0)**](https://github.c
 - `data_pipeline/` — example base pipeline for cleaning, plus custom filters
 - `dataset_processing/` - individual scripts for dataset download and processing
 
+## High-Quality Datasets
+
+| Dataset | Links |
+|---------|-------|
+| EMEA-V3 | [Link](https://huggingface.co/datasets/qanastek/EMEA-V3) |
+| Europarl | [Link](https://huggingface.co/datasets/Helsinki-NLP/europarl) |
+| Opus Books | [Link](https://huggingface.co/datasets/Helsinki-NLP/opus_books) |
+| Eurovoc | [Link](https://huggingface.co/datasets/EuropeanParliament/Eurovoc) |
+| News Commentary | [Link](https://huggingface.co/datasets/Helsinki-NLP/news_commentary) |
+| Eac_tm | [Link](https://huggingface.co/datasets/community-datasets/europa_eac_tm) |
+| Academic Texts CLARIN | [Link](https://www.clarin.eu/resource-families/corpora-academic-texts) |
+| Opus_100 | [Link](https://huggingface.co/datasets/Helsinki-NLP/opus-100) |
+| Chitanka (HF) | [Link](https://huggingface.co/datasets/petkopetkov/chitanka) |
+| MOSEL | [Link](https://huggingface.co/datasets/FBK-MT/mosel?row=48) |
+| Wikipedia | [Link](https://huggingface.co/datasets/wikimedia/wikipedia) |
+| News | [Link](https://huggingface.co/datasets/intfloat/multilingual_cc_news) |
+| BNC (1951–2021) | [Link](https://dcl.bas.bg/bulnc/dostap/izteglyane/) |
+| CS Academic Abstracts | [Link](https://lindat.mff.cuni.cz/repository/xmlui/handle/11234/1-1731?show=full) |
+| Academic Texts | [Link](https://spraakbanken.gu.se/resurser/sweacsam) |
+| Literaturbanken | [Link](https://spraakbanken.gu.se/resurser/lb-open) |
+| Poems | [Link](https://spraakbanken.gu.se/resurser/poeter) |
+| SVT News 2022 | [Link](https://spraakbanken.gu.se/resurser/svt-2022) |
+| CLEAR Drugs and Notes | [Link](http://natalia.grabar.free.fr/resources.php) |
+| Multilingual Medical Corpus | [Link](https://huggingface.co/datasets/HiTZ/Multilingual-Medical-Corpus) |
+| OpenSubtitles | [Link](https://opus.nlpl.eu/OpenSubtitles/en&bg/v2018/OpenSubtitles) |
+| Academic Texts 2 | [Link](https://spraakbanken.gu.se/resurser/sweachum) |
+| Swedish Books | [Link](https://spraakbanken.gu.se/resurser/runeberg-biblblad) |
+| WMT17 | [Link](https://huggingface.co/datasets/wmt/wmt17) |
+| Yle News | [Link](https://www.kielipankki.fi/download/YLE/) |
+| CurliCat Polish Corpus (ELRC-SHARE) | [Link](https://elrc-share.eu/repository/browse/curlicat-polish-corpus/f63ae912553911ed9c1a00155d02670648c0a234e0314895b52169af2af57dd7/) |
+| Clarin-PL Corpus | [Link](https://clarin-pl.eu/dspace/handle/11321/699) |
+| European Language Grid Corpus | [Link](https://live.european-language-grid.eu/catalogue/corpus/1279) |
+| Czech SYN2015 | [Link](https://lindat.mff.cuni.cz/repository/items/2d4b6f01-c80c-4a7e-956f-642a8fa42b74) |
+| ParlSpeechv2 | [Link](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/L4OAKN) |
+| Ylilauta (Kielipankki) | [Link](https://www.kielipankki.fi/corpora/ylilauta/) |
+| JRC-Acquis | [Link](https://clarino.uib.no/comedi/editor/lb-2017020801) |
+| Suomi24 (2018-2020) | [Link](https://clarino.uib.no/comedi/editor/lb-2021101521) |
+| BG News | [Link](https://dcl.bas.bg/BulNC-registration/#feeds/page/3) |
+| OpenCulture | [Link](https://huggingface.co/collections/PleIAs/openculture-65d46e3ea3980fdcd66a5613) |
+
 ## Cleaning & Filtering Pipeline
 
 Different datasets required different filtering rules, but the **full pipeline** included:

@@ -17,9 +17,41 @@ echo "Starting bash script"
 module purge
 module load LUMI/24.03 partition/G
 
-GBS="64" # To be defined
-LR="0.004" # To be defined
-TOTAL_ITERS="290000" # To be defined
+### This script launches a small experiment with a 100M model on the LUMI cluster.
+
+
+## USAGE: sbatch DATA_ROOT GBS LR TOTAL_ITERS MODEL_SIZE
+## EXAMPLE: sbatch /scratch/project_462000756/data/train_bin 64 0.004 290000 100M
+
+
+# Check if GBS argument is passed
+if [ -z "$1" ]; then
+  echo "Error: DATA_ROOT is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$2" ]; then
+  echo "Error: GBS is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$3" ]; then
+  echo "Error: LR is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$4" ]; then
+  echo "Error: TOTAL_ITERS is not provided. Exiting."
+  exit 1
+fi
+if [ -z "$5" ]; then
+  echo "Error: MODEL_SIZE is not provided. Exiting."
+  exit 1
+fi
+
+# Input path (update this or pass it as a parameter)
+DATA_ROOT=$1
+GBS=$2
+LR=$3
+TOTAL_ITERS=$4
+MODEL_SIZE=$5
 
 #SAVING AND EVAL
 LOG_INTERVAL=1
@@ -27,23 +59,24 @@ SAVE_INTERVAL=20000
 EVAL_INTERVAL=4000
 EVAL_STEPS=32
 
+PROJECT_ROOT_FOLDER="/scratch/project_462000756"
 
-WANDB_EXP_NAME="100M_bs_lr_experiment_lr_004_bs_64"
+WANDB_EXP_NAME="${MODEL_SIZE}_bs_lr_experiment_lr_${LR}_bs_${GBS}_total_iters_${TOTAL_ITERS}"
 
 
 WANDB_PROJECT="small-lm"
 WANDB_SAVE_DIR="wandb_logs"
 
-DATA_ROOT="/scratch/project_462000756/data/train_bin"
+
 CACHE_PATH="${DATA_ROOT}/index-cache"
 
 DATA_PATH="0.25 ${DATA_ROOT}/en 0.02 ${DATA_ROOT}/code 0.13 ${DATA_ROOT}/es 0.01 ${DATA_ROOT}/el 0.07 ${DATA_ROOT}/pt 0.04 ${DATA_ROOT}/pl 0.12 ${DATA_ROOT}/fr 0.01 ${DATA_ROOT}/fi 0.01 ${DATA_ROOT}/sv 0.06 ${DATA_ROOT}/it 0.17 ${DATA_ROOT}/de 0.04 ${DATA_ROOT}/nl 0.02 ${DATA_ROOT}/cs 0.01 ${DATA_ROOT}/bg"
 
 
-SAVE_PATH="/scratch/project_462000756/checkpoints/${WANDB_EXP_NAME}"
+SAVE_PATH="${PROJECT_ROOT_FOLDER}/checkpoints/${WANDB_EXP_NAME}"
 mkdir -p $SAVE_PATH
 
-TOKENIZER_MODEL="/scratch/project_462000756/tokeniser/ConvertedTokenizer"
+TOKENIZER_MODEL="${PROJECT_ROOT_FOLDER}/tokeniser/ConvertedTokenizer"
 
 ln -sf ${SLURM_JOB_NAME}-${SLURM_JOBID}.out logs/latest.out
 ln -sf ${SLURM_JOB_NAME}-${SLURM_JOBID}.err logs/latest.err
@@ -92,9 +125,7 @@ done
 
 MODEL_SIZE="100M"
 FSDP="0"
-# TOTAL_ITERS="20"
 SEQ_LEN="2048"
-# GBS="32"
 MBS="4"
 RECOMPUTATION="${RECOMPUTATION:-0}"
 
@@ -109,26 +140,7 @@ SAVE_CKPT_PATH="${SAVE_CKPT_PATH:-None}"
 PROFILE="${PROFILE:-0}"
 
 
-# https://huggingface.co/HuggingFaceTB/SmolLM2-135M/blob/main/config.json
-if [[ $MODEL_SIZE = "200M" ]]; then #test
-    NHIDDEN=576
-    FFN_HIDDEN_SIZE=1536
-    NLAYERS=30
-    NHEADS=9
-    NUM_KV_HEADS=3
-    TIE_WORD_EMBEDDINGS=1
-    
-# https://huggingface.co/HuggingFaceTB/SmolLM-360M/blob/main/config.json
-elif [ "$MODEL_SIZE" = "360M" ]; then
-    NHIDDEN=960
-    FFN_HIDDEN_SIZE=2560
-    NLAYERS=32
-    NHEADS=15
-    NUM_KV_HEADS=5
-    TIE_WORD_EMBEDDINGS=1
-
-# https://huggingface.co/HuggingFaceTB/SmolLM-1.7B/blob/main/config.json
-elif [ "$MODEL_SIZE" = "1B" ]; then
+if [ "$MODEL_SIZE" = "1B" ]; then
     NHIDDEN=1536
     FFN_HIDDEN_SIZE=6144
     NLAYERS=32
@@ -144,23 +156,6 @@ elif [ "$MODEL_SIZE" = "30M" ]; then
     NHEADS=6
     NUM_KV_HEADS=3
     TIE_WORD_EMBEDDINGS=1
-
-elif [ "$MODEL_SIZE" = "7B" ]; then
-    NHIDDEN=4096
-    FFN_HIDDEN_SIZE=14336
-    NLAYERS=32
-    NHEADS=32
-    NUM_KV_HEADS=8
-    TIE_WORD_EMBEDDINGS=0
-
-elif [ "$MODEL_SIZE" = "33B" ]; then
-    NHIDDEN=7168
-    FFN_HIDDEN_SIZE=20480
-    NLAYERS=56
-    NHEADS=56
-    NUM_KV_HEADS=8
-    TIE_WORD_EMBEDDINGS=0
-
 elif [ "$MODEL_SIZE" = "60M" ]; then
     NHIDDEN=512
     FFN_HIDDEN_SIZE=2048

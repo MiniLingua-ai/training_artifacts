@@ -3,11 +3,11 @@ import pandas as pd
 
 # Define the parent folder containing the subfolders
 parent_folder = "/scratch/cs/small_lm/wikipedia"
-langs = ['en'] #[ 'cs',  'de', 'pl', 'fi', 'es',  'fr', 'sv']
+langs = ['en', 'cs',  'de', 'pl', 'fi', 'es',  'fr', 'sv']
 
 print('process started')
 # Iterate over all subfolders in the parent folder
-for child_folder in langs: #os.listdir(parent_folder):
+for child_folder in langs:
     child_path = os.path.join(parent_folder, child_folder)
     print(child_path)
     
