@@ -110,10 +110,12 @@ The training dynamics during SFT are illustrated below, showing the convergence 
 
 ![Training and Validation Loss Curves](training_loss.png)
 
-## 🔧 Training Environment
+## 🔧 Training Environment and Setup
 
 We trained our models using [NVIDIA Megatron-LM](https://github.com/NVIDIA/Megatron-LM), running inside the official [NGC PyTorch container](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch?version=25.04-py3).
 
 In addition, we installed [TransformerEngine](https://github.com/NVIDIA/TransformerEngine) for optimized kernels and Hugging Face libraries (`transformers`, `datasets`, `tokenizers`) for data and tokenizer support. The versions used are pinned in `requirements.txt`.
 
 Setup follows directly from the instructions in the linked repositories, with minor environment variable adjustments needed specifically for the cluster we were working with.
+
+After configuring the setup, you can configure `sft_configs` according to your cluster and model parameters and run them on your slurm cluster.

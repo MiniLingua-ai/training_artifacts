@@ -72,7 +72,7 @@ SAVE_PATH="/scratch/cs/small_lm/sft/train_balanced/${WANDB_EXP_NAME}"
 mkdir -p $SAVE_PATH
 
 # Tokenizer (HF repo or local path)
-TOKENIZER_MODEL="aaaksenova/small_llm_eu"
+TOKENIZER_MODEL="minilingua-ai/MiniLingua-1b-Instruct"
 
 export CUDA_DEVICE_MAX_CONNECTIONS=1            # Limit CUDA connections; helps with seq/ctx parallel contention
 
@@ -323,7 +323,7 @@ OUTPUT_ARGS=" \
 # Data loading & tokenizer options
 DATA_ARGS="
     --tokenizer-type SFTTokenizer \
-    --tokenizer-model aaaksenova/small_llm_eu \
+    --tokenizer-model $TOKENIZER_MODEL \
     --dataloader-type single \
     --num-workers 4 \
     --data-path $DATA_PATH \
