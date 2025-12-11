@@ -2,11 +2,11 @@
 
 This folder contains evaluation scripts and benchmarks for assessing the **MiniLingua 1B** model's performance across multiple languages and tasks. The evaluation covers both base and instruction-tuned checkpoints using established multilingual benchmarks.
 
-## 🎯 Evaluation Overview
+## Evaluation Overview
 
 The evaluation framework assesses MiniLingua 1B across diverse multilingual tasks.
 
-## 📊 Evaluation Benchmarks
+## Evaluation Benchmarks
 
 ### Core Benchmarks
 | Benchmark | Task Type | Languages | Response Format | Description | Evaluation script |
@@ -43,7 +43,7 @@ python <script>.py --model_name /path/to/hf/model --model <model_alias_for_savin
 python <script>.py --model_name /path/to/hf/model --model <model_alias_for_saving> --base_path /path/to/evaluation
 ```
 
-## 📈 Performance Results
+## Performance Results
 
 ### Base Model Performance
 **MiniLingua-1b-base vs. Competing Models**

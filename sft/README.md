@@ -2,7 +2,7 @@
 
 This folder contains configuration files, scripts, and notes for supervised fine-tuning (SFT) of the MiniLingua 1B model. SFT adapts the pre-trained base model to follow multilingual and multi-domain instructions, making it more useful and better aligned with user needs.
 
-## 🎯 Overview
+## Overview
 
 Supervised Fine-Tuning is the second stage of model training where the goal is to adapt the model to follow instructions and perform specific tasks more effectively. The SFT process uses smaller, more carefully selected datasets compared to pre-training, focusing on instruction-response pairs across multiple languages and domains.
 
@@ -13,7 +13,7 @@ Supervised Fine-Tuning is the second stage of model training where the goal is t
 - **Output-Token-Only Training**: Efficient training focusing on response generation
 - **Overfitting Prevention**: Careful monitoring and early stopping
 
-## 📊 SFT Dataset Composition
+## SFT Dataset Composition
 
 ### Core Multilingual Datasets
 
@@ -45,7 +45,7 @@ A specialized dataset was created for multiple-choice question answering, suppor
 - 30% instructions in English
 - 70% instructions in target language
 
-## 📁 Contents
+## Contents
 
 Training configs presented as `.sh` scripts include batch sizes, LR schedules, optimizer choices and other parameters as a part of Megatron-LM launch script.
 `token_counts.csv` presents training data distribution.
@@ -55,9 +55,9 @@ Training configs presented as `.sh` scripts include batch sizes, LR schedules, o
 `data_shuffle.py` reads sft datasets and shuffles each instructions in each file randomly.
 `create_sft_mcqa.py` processes various QA datasets and create custom multi-choice QA multilingual dataset.
 
-## 🔧 Training Configuration
+## Training Configuration
 
-### 🖥️ Hardware Setup
+### Hardware Setup
 | Component | Specification |
 |-----------|---------------|
 | **Platform** | Aalto Triton Supercomputer |
@@ -66,9 +66,9 @@ Training configs presented as `.sh` scripts include batch sizes, LR schedules, o
 | **Total Memory** | 1TB system memory |
 | **Storage** | High-performance scratch storage |
 
-### ⚙️ Training Parameters
+### Training Parameters
 ```yaml
-# 🎯 Core Training Settings
+# Core Training Settings
 MICRO_BATCH_SIZE: 16
 GLOBAL_BATCH_SIZE: 256
 LEARNING_RATE: 2e-6
@@ -76,7 +76,7 @@ SEQUENCE_LENGTH: 2048
 ```
 
 
-### 🌍 Language Distribution
+### Language Distribution
 | Language | Percentage |
 |----------|------------|
 | 🇬🇧 **English** | 27% |
@@ -95,7 +95,7 @@ SEQUENCE_LENGTH: 2048
 | 💻 **Code** | 5% |
 
 
-### ⏱️ Training Performance
+### Training Performance
 | Metric | Value |
 |--------|-------|
 | **⏰ Total Time** | ~50 hours |
@@ -104,13 +104,13 @@ SEQUENCE_LENGTH: 2048
 | **⚡ Throughput** | ~43 instructions/second |
 | **🖥️ Hardware** | 4 × NVIDIA H200 GPUs |
 
-### 📈 Training Loss Curve
+### Training Loss Curve
 
 The training dynamics during SFT are illustrated below, showing the convergence behavior of both training and validation loss over the course of training iterations.
 
 ![Training and Validation Loss Curves](training_loss.png)
 
-## 🔧 Training Environment and Setup
+## Training Environment and Setup
 
 We trained our models using [NVIDIA Megatron-LM](https://github.com/NVIDIA/Megatron-LM), running inside the official [NGC PyTorch container](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch?version=25.04-py3).
 

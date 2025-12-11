@@ -1,8 +1,8 @@
-# MiniLingua 1B: Large Language Model Training
+#  Pre-training Scripts
 
 This repository contains the complete training pipeline for **MiniLingua 1B**, a 1-billion parameter decoder-only transformer language model trained from scratch using Megatron-LM.
 
-## 🚀 Model Overview
+## Model Overview
 
 **MiniLingua 1B** is a multilingual large language model with the following specifications:
 
@@ -29,7 +29,7 @@ Normalization: RMSNorm
 Activation: SwiGLU
 ```
 
-## 📁 Training Scripts
+## Training Scripts
 
 This folder contains training scripts that demonstrate different aspects of the complete training process:
 
