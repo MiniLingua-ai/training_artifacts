@@ -3,11 +3,9 @@ import os
 import pandas as pd
 import logging
 from collections import defaultdict
-from tqdm.auto import tqdm
 from multiprocessing import Pool
 from collections import defaultdict
 import argparse
-import random
 import json
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -142,7 +140,7 @@ def code_generator(code_folder="/scratch/cs/small_lm/test_code"):
                 file_path_to_id = run_processing(path_)
 
     
-    # go over each file and tokenise
+                # go over each file and tokenise
                 for file_path, indices in file_path_to_id.items():
                     file_name = file_path.rsplit('/')[-2]
                     for lang in list(code_distibution.keys()):
@@ -188,13 +186,12 @@ def generator(folder="./../test_web"):
                 file_path_to_id = run_processing(path_)
 
     
-    # go over each file and tokenise
+                # go over each file and tokenise
                 for file_path, indices in file_path_to_id.items():
                     file_name = file_path.rsplit('/', 1)[-1]
                     for short_lang, lang in list(lang_mapping.items()):
                         if f"-{lang}" in file_name:
                             break
-                        
                     
                     if lang_to_n_chars[short_lang] <= 0:
                         logging.info(f"Skip file: {file_path}")
@@ -214,8 +211,6 @@ def generator(folder="./../test_web"):
                         lang_to_n_chars[short_lang] -= len(text)
 
                         yield lang, text
-
-
 
 # create dict langs wordcount
 langs_wordcount = defaultdict(int)
