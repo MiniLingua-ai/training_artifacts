@@ -23,6 +23,26 @@ For multiple-choice tasks (Belebele, SIB, MMLU), the model is evaluated with:
 - **Number format**: 1, 2, 3, 4 responses
 - **Full response format**: Model should provide full answer across suggested options.
 
+## Running instructions
+
+To run the scripts you have to specify the following parameters:
+
+`model_name` - model path on HuggingFace or in local
+`model` - model alias to use for saving the results
+`base_path` - base path for saving the results
+
+Use the following patterns to run each evaluation script:
+
+- General CLI pattern for MMLU/Belebele/Sib:
+```
+python <script>.py --model_name /path/to/hf/model --model <model_alias_for_saving> --answer_type <letter|number|answer> --base_path /path/to/evaluation
+```
+
+- General CLI pattern for FLORES/MassiveSum:
+```
+python <script>.py --model_name /path/to/hf/model --model <model_alias_for_saving> --base_path /path/to/evaluation
+```
+
 ## 📈 Performance Results
 
 ### Base Model Performance
