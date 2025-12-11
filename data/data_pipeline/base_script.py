@@ -15,17 +15,18 @@ from bad_words_filter import CustomBadWordsFilter
 
 DUMP = 'high_quality'
 MAIN_OUTPUT_PATH = "datatrove_output"
+INPUT_FOLDER_PATH = "your/input/folder"
 LANG = 'bg'
 LANG_ISO = 'bul'
 TOKEN_COUNTER = 'rmihaylov/bert-base-bg'
-PARTITION = 'batch_hsw'
+PARTITION = 'your_cluster_partition'
 
 executor = SlurmPipelineExecutor(
-    job_name=f"{DUMP}_{LANG}_news",
+    job_name=f"{DUMP}_{LANG}",
     pipeline=[
         ParquetReader(
-            data_folder="/scratch/cs/small_lm/open_subtitles",
-            glob_pattern=f"{LANG}_1_0.parquet",
+            data_folder=INPUT_FOLDER_PATH,
+            glob_pattern=f"{LANG}.parquet",
             default_metadata={"dump": DUMP},
         ),
         TokensCounter(TOKEN_COUNTER),

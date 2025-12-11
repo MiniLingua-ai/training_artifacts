@@ -5,6 +5,12 @@ The dataset includes 13 European languages plus programming code corpora, with e
 
 Data preparation relied on the [**Datatrove library (v0.4.0)**](https://github.com/huggingface/datatrove/tree/main), along with several custom scripts and processors. These handled both content filtering (e.g., removing inappropriate text) and cluster-specific preprocessing.
 
+The scripts are adapted to be run on Slurm-enabled cluster, therefore, the simplest way to launch a data processing job for the dataset you want would be to go through the following steps:
+
+1. Set up the environment in your env management tool. The main requirements are python3.11 and datatrove 0.4.0
+2. Create a folder with parquet files that have naming format `language.parquet` and column `text` containing the target text for preprocessing
+3. Fill in the relevant parameters in `data_pipeline/base_script.py`
+4. Create `slurm` config file to run the script on your cluster (see `example.slurm`) and run it
 
 ## Folder Contents
 - `bad_words/` — multilingual lists of obscene/sexual terms used for filtering  
