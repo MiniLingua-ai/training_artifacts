@@ -58,7 +58,6 @@ def get_file_names(folder_name):
 
 def train_tokenizer(args):
     wandb.login(key="key")
-    # I changed project name so that it's in our project
     wandb.init(project="Tokenizer training", name=f"tokenizer_{args.model_type}_{args.vocab_size}_tsv", config={
         "vocab_size": args.vocab_size,
         "model_type": args.model_type,

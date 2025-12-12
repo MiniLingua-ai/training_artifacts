@@ -1,7 +1,6 @@
 import argparse
 from datatrove.executor.slurm import SlurmPipelineExecutor
-from datatrove.pipeline.readers.parquet import ParquetReaderProxy, ParquetReader
-from datatrove.pipeline.tokens.merger import DocumentTokenizerMerger
+from datatrove.pipeline.readers.parquet import ParquetReader
 from datatrove.pipeline.tokens.tokenizer import DocumentTokenizer
 import json
 

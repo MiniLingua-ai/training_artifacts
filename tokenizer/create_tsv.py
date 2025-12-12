@@ -1,15 +1,12 @@
 import os
 import pandas as pd
-import psutil
 import argparse
 import logging
 import re
 from collections import defaultdict
-from tqdm.auto import tqdm
 from multiprocessing import Pool
 from collections import defaultdict
 import regex
-import random
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 

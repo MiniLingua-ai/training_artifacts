@@ -2,11 +2,11 @@
 
 This folder contains evaluation scripts and benchmarks for assessing the **MiniLingua 1B** model's performance across multiple languages and tasks. The evaluation covers both base and instruction-tuned checkpoints using established multilingual benchmarks.
 
-## 🎯 Evaluation Overview
+## Evaluation Overview
 
 The evaluation framework assesses MiniLingua 1B across diverse multilingual tasks.
 
-## 📊 Evaluation Benchmarks
+## Evaluation Benchmarks
 
 ### Core Benchmarks
 | Benchmark | Task Type | Languages | Response Format | Description | Evaluation script |
@@ -23,7 +23,27 @@ For multiple-choice tasks (Belebele, SIB, MMLU), the model is evaluated with:
 - **Number format**: 1, 2, 3, 4 responses
 - **Full response format**: Model should provide full answer across suggested options.
 
-## 📈 Performance Results
+## Running instructions
+
+To run the scripts you have to specify the following parameters:
+
+`model_name` - model path on HuggingFace or in local
+`model` - model alias to use for saving the results
+`base_path` - base path for saving the results
+
+Use the following patterns to run each evaluation script:
+
+- General CLI pattern for MMLU/Belebele/Sib:
+```
+python <script>.py --model_name /path/to/hf/model --model <model_alias_for_saving> --answer_type <letter|number|answer> --base_path /path/to/evaluation
+```
+
+- General CLI pattern for FLORES/MassiveSum:
+```
+python <script>.py --model_name /path/to/hf/model --model <model_alias_for_saving> --base_path /path/to/evaluation
+```
+
+## Performance Results
 
 ### Base Model Performance
 **MiniLingua-1b-base vs. Competing Models**
