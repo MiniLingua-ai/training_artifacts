@@ -8,6 +8,41 @@ The final trained models and tokenizer are available on Hugging Face:
 
 **[https://huggingface.co/minilingua-ai](https://huggingface.co/minilingua-ai)**
 
+
+Quick start with `Transformers`:
+
+```python
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+import torch
+
+model_name = "minilingua-ai/MiniLingua-1b-Instruct"
+
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", torch_dtype=torch.float16)
+gen = pipeline("text-generation", model=model, tokenizer=tokenizer, trust_remote_code=True)
+
+prompt = "Translate from Bulgarian: Здравейте! Как сте? Translation:"
+out = gen(prompt, max_new_tokens=128, do_sample=False)
+print(out[0])
+```
+
+Quick start with `vllm` (only on GPU-enabled envs):
+
+```python
+from vllm import LLM, SamplingParams
+
+model_name = "minilingua-ai/MiniLingua-1b-Instruct"
+
+llm = LLM(model=model_name)
+
+prompt = "Translate from Bulgarian: Здравейте! Как сте? Translation:"
+
+params = SamplingParams(temperature=0.0, max_tokens=128)
+
+for result in llm.generate(prompt, sampling_params=params):
+    print(result.text)
+```
+
 ---
 
 ## Repository Structure
@@ -35,10 +70,10 @@ The repository is organized as follows:
 
 The training of MiniLingua was conducted on two large-scale HPC clusters:  
 
-- **LUMI Supercomputer (CSC Finland)**  
+- **[LUMI Supercomputer (CSC Finland)](https://lumi-supercomputer.eu)**  
   Used for large-batch pretraining runs across multiple nodes.  
 
-- **Triton Supercomputer (Aalto University / CSC Finland)**  
+- **[Triton Supercomputer (Aalto University / CSC Finland)](https://scicomp.aalto.fi/triton/)**  
   Used for experimental runs, tokenizer pretraining, and SFT experiments.  
 
 Each folder contains setup instructions and environment hints for reproducing the training on these clusters.  
