@@ -1,0 +1,8 @@
+numpy
+pandas
+tqdm
+regex
+datasets==2.18.0
+transformers==4.41.0
+argparse
+vllm==0.12.0
