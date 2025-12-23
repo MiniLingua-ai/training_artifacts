@@ -9,7 +9,7 @@ The final trained models and tokenizer are available on Hugging Face:
 **[https://huggingface.co/minilingua-ai](https://huggingface.co/minilingua-ai)**
 
 
-Quick start with `Transformers`:
+Quick start with `Transformers` both for GPU and CPU enabled envs:
 
 ```python
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
@@ -26,22 +26,7 @@ out = gen(prompt, max_new_tokens=128, do_sample=False)
 print(out[0])
 ```
 
-Quick start with `vllm` (only on GPU-enabled envs):
-
-```python
-from vllm import LLM, SamplingParams
-
-model_name = "minilingua-ai/MiniLingua-1b-Instruct"
-
-llm = LLM(model=model_name)
-
-prompt = "Translate from Bulgarian: Здравейте! Как сте? Translation:"
-
-params = SamplingParams(temperature=0.0, max_tokens=128)
-
-for result in llm.generate(prompt, sampling_params=params):
-    print(result.text)
-```
+**Note:** since the instruct model was trained in `bfloat16` using `cuda 3.12` (see exact nvidia image in `sft` folder), `vllm`-powered inference is available only on devices that support respective library versions, i.e. A100 and newer.
 
 ---
 
