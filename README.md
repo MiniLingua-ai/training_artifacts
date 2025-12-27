@@ -18,7 +18,7 @@ import torch
 model_name = "minilingua-ai/MiniLingua-1b-Instruct"
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", torch_dtype=torch.float16)
+model = AutoModelForCausalLM.from_pretrained(model_name, device_map="auto", dtype=torch.float16)
 gen = pipeline("text-generation", model=model, tokenizer=tokenizer, trust_remote_code=True)
 
 prompt = "Translate from Bulgarian: Здравейте! Как сте? Translation:"
